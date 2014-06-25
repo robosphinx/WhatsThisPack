@@ -1,6 +1,6 @@
 [
 {
-  "modid": "wtp",
+  "modid": "WhatsThisPack",
   "name": "WTP",
   "description": "WTP, or What's this pack, simply displays a modpack name or a message in the upper left corner of the main menu. The string and color are both configurable.",
   "version": "1.0",
