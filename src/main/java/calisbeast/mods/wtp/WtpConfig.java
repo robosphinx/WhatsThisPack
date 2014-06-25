@@ -10,6 +10,9 @@ import net.minecraftforge.common.config.Configuration;
 
 public class WtpConfig {
 	
+	/*
+	 * This is where we load the config file, set and/or get the values we need, and then save the file.
+	 */
 	public static void loadConfig(Configuration config) {
 		config.load();
 		strings.add(config.get(Configuration.CATEGORY_GENERAL, "Modpack Name", "Change this in your configs!!").getString());
@@ -17,6 +20,9 @@ public class WtpConfig {
 		config.save();
 	}
 	
+	/*
+	 * These array lists are where we store the values to be accessed elsewhere in the mod.
+	 */
 	public static ArrayList<String> strings = new ArrayList<String>();
 	public static ArrayList<Integer> ints = new ArrayList<Integer>();
 
