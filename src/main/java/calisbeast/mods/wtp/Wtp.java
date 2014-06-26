@@ -4,10 +4,13 @@ package calisbeast.mods.wtp;
  * @author robosphinx, calisbeast
  */
 
+import calisbeast.mods.wtp.event.WtpEvent;
+import calisbeast.mods.wtp.references.WtpConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -51,33 +54,5 @@ public class Wtp {
 	@EventHandler
 	public void Init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new WtpEvent());
-	}
-	
-	/*
-	 * Our event handler class - I do this if we have two very small classes that will only be used by each other.
-	 */
-	public class WtpEvent extends GuiScreen {
-		
-		/*
-		 * These get an instance of Minecraft and it's FontRenderer, because we can't make a direct static reference to something that isn't static.
-		 */
-		private Minecraft mc = Minecraft.getMinecraft();
-		private FontRenderer fontRenderer = mc.fontRenderer;
-		
-		/*
-		 * gets our values from the config.
-		 */
-		private String string = WtpConfig.strings.get(0);
-		private int color = WtpConfig.ints.get(0);
-	
-		/*
-		 * This is the actual event we're tapping into - every time the GUI is an instance of the Main Menu, we will call to render our text.
-		 */
-		@SubscribeEvent
-		public void onRenderMainMenu(GuiScreenEvent event) {
-			if (event.gui instanceof GuiMainMenu) {
-				fontRenderer.drawStringWithShadow(string, 2, 2, color);
-			}
-		}
 	}
 }
