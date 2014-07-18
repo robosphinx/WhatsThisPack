@@ -17,12 +17,12 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.2-1.0"
-group= "calisbeast.mods.wtp"
+version = "1.7.10-1.0"
+group= "robosphinx.mods.wtp"
 archivesBaseName = "WhatsThisPack"
 
 minecraft {
-    version = "1.7.2-10.12.2.1133"
+    version = "1.7.10-10.13.3.1180"
     assetDir = "eclipse/assets"
 }
 
