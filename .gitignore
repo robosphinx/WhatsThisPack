@@ -7,6 +7,5 @@
 /gradle/
 .classpath
 .project
-*.gradle
 gradlew
 gradlew.bat
