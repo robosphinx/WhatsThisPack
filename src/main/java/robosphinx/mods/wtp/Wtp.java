@@ -1,11 +1,11 @@
-package calisbeast.mods.wtp;
+package robosphinx.mods.wtp;
 
 /**
  * @author robosphinx, calisbeast
  */
-
-import calisbeast.mods.wtp.event.WtpEvent;
-import calisbeast.mods.wtp.references.WtpConfig;
+import robosphinx.mods.wtp.event.WtpEvent;
+import robosphinx.mods.wtp.handler.ConfigHandler;
+import robosphinx.mods.wtp.reference.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -24,35 +24,30 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 /*
  * Defines our mod for FML and Forge to load.
  */
-@Mod(modid = Wtp.MODID, name = Wtp.NAME, version = Wtp.VERSION)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 public class Wtp {
-	
-	/*
-	 * References (just to keep them together).
-	 */
-	public static final String MODID = "WhatsThisPack";
-	public static final String NAME = "What's This Pack";
-	public static final String VERSION = "1.0";
-	
-	/*
-	 * Makes this class accessible from other mods (makes addons and integration possible).
-	 */
-	@Instance(value = MODID)
-	public static Wtp instance;
-	
-	/*
-	 * Forge pre-initialization call, loads our config or creates a config if none exists.
-	 */
-	@EventHandler
-	public void PreInit(FMLPreInitializationEvent event) {
-		WtpConfig.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
-	}
-	
-	/*
-	 * Registers our event handler so it will be able to tap into the MinecraftForge event classes.
-	 */
-	@EventHandler
-	public void Init(FMLInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(new WtpEvent());
-	}
+
+    private ConfigHandler config;
+    /*
+     * Makes this class accessible from other mods (makes addons and integration possible).
+     */
+    @Instance(value = Reference.MOD_ID)
+    public static Wtp     instance;
+
+    /*
+     * Forge pre-initialization call, loads our config or creates a config if none exists.
+     */
+    @EventHandler
+    public void PreInit(FMLPreInitializationEvent event) {
+        // Sends the event call to our Config Handler.
+        ConfigHandler.init(event.getSuggestedConfigurationFile());
+    }
+
+    /*
+     * Registers our event handler so it will be able to tap into the MinecraftForge event classes.
+     */
+    @EventHandler
+    public void Init(FMLInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(new WtpEvent());
+    }
 }

@@ -1,4 +1,4 @@
-package calisbeast.mods.wtp.references;
+package robosphinx.mods.wtp.references;
 
 /**
  * @author robosphinx, calisbeast
