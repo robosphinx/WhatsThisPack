@@ -1,6 +1,6 @@
 package robosphinx.mods.wtp.plugins;
 
-import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import robosphinx.mods.wtp.reference.Reference;
 
 

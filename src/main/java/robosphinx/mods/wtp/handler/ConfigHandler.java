@@ -1,12 +1,12 @@
 package robosphinx.mods.wtp.handler;
 
-import java.io.File;
-
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.common.config.Configuration;
 import robosphinx.mods.wtp.reference.Reference;
 import robosphinx.mods.wtp.util.LogHelper;
-import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
 
 public class ConfigHandler {
 
@@ -16,10 +16,10 @@ public class ConfigHandler {
     public static String        message  = "";
     public static String        message2 = "";
     public static String        message3 = "";
-    public static String        favIcon  = "icon";
+    // public static String        favIcon  = "icon";
     public static int           lines    = 1;
-    public static boolean       image    = false;
-    public static boolean       shadow   = false;
+    // public static boolean       image    = false;
+    // public static boolean       shadow   = false;
     private static LogHelper    log;
 
     /*
@@ -49,10 +49,10 @@ public class ConfigHandler {
         message     = config.get(Configuration.CATEGORY_GENERAL, "Text Line 1", "** Default Line 1 **", "This is the text that will be displayed on the main menu.").getString();
         message2    = config.get(Configuration.CATEGORY_GENERAL, "Text Line 2", "** Default Line 2 **", "Text for line 2.").getString();
         message3    = config.get(Configuration.CATEGORY_GENERAL, "Text Line 3", "** Default Line 3 **", "Text for line 3.").getString();
-        favIcon     = config.get("WIP", "Favorite Icon", "icon", "Which icon to use most often (possibly).").getString();
+        // favIcon     = config.get("WIP", "Favorite Icon", "icon", "Which icon to use most often (possibly).").getString();
         lines       = config.get(Configuration.CATEGORY_GENERAL, "Lines", 1, "How many lines you are using. Max of 3 right now.").getInt(1);
-        image       = config.get("WIP", "Icon", false, "Whether or not to display an icon in the top left corner of the Main Menu. NOT YET IMPLEMENTED!").getBoolean(false);
-        shadow      = config.get(Configuration.CATEGORY_GENERAL, "Text Shadow", true, "Whether or not the text has a shadow.").getBoolean(true);
+        // image       = config.get("WIP", "Icon", false, "Whether or not to display an icon in the top left corner of the Main Menu. NOT YET IMPLEMENTED!").getBoolean(false);
+        // shadow      = config.get(Configuration.CATEGORY_GENERAL, "Text Shadow", true, "Whether or not the text has a shadow.").getBoolean(true);
         // If the config file has changed, only THEN save it.
         if (config.hasChanged()) {
             config.save();
@@ -64,9 +64,9 @@ public class ConfigHandler {
         log.info("++  line 1: " + message);
         log.info("++  line 2: " + message2);
         log.info("++  line 3: " + message3);
-        log.info("++  icon  : " + favIcon);
-        log.info("++  image : " + image);
-        log.info("++  shadow: " + shadow);
+        // log.info("++  icon  : " + favIcon);
+        // log.info("++  image : " + image);
+        // log.info("++  shadow: " + shadow);
         log.info("++++++++++++++++++++++++++++++++++++++");
     }
 }

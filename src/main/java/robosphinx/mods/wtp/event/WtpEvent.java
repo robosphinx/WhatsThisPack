@@ -1,27 +1,15 @@
 package robosphinx.mods.wtp.event;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.*;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import robosphinx.mods.wtp.handler.ConfigHandler;
+import robosphinx.mods.wtp.util.LogHelper;
+
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraftforge.client.event.GuiScreenEvent;
-
-import org.lwjgl.opengl.GL11;
-
-import robosphinx.mods.wtp.Wtp;
-import robosphinx.mods.wtp.handler.ConfigHandler;
-import robosphinx.mods.wtp.handler.ResourceHandler;
-import robosphinx.mods.wtp.util.LogHelper;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class WtpEvent extends GuiScreen {
 
@@ -29,7 +17,7 @@ public class WtpEvent extends GuiScreen {
      * These get an instance of Minecraft and it's FontRenderer, because we can't make a direct static reference to something that isn't static.
      */
     private Minecraft        mc           = Minecraft.getMinecraft();
-    private FontRenderer     fontRenderer = mc.fontRenderer;
+    private FontRenderer     fontRenderer = mc.standardGalacticFontRenderer;
     private LogHelper        log;
     private ScaledResolution scale;
     public static WtpEvent   instance     = new WtpEvent();
@@ -49,8 +37,8 @@ public class WtpEvent extends GuiScreen {
     private String           string3      = ConfigHandler.message3;
     private int              color        = ConfigHandler.color;
     private int              textPos      = ConfigHandler.guiPos;
-    private boolean          image        = ConfigHandler.image;
-    private boolean          shadow       = ConfigHandler.shadow;
+    // private boolean          image        = ConfigHandler.image;
+    // private boolean          shadow       = ConfigHandler.shadow;
     private int              lines        = ConfigHandler.lines;
     
     public static HashMap<String, Integer>         iconNames   = new HashMap<String, Integer>();
@@ -65,7 +53,7 @@ public class WtpEvent extends GuiScreen {
         scale = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         if (textPos == 0) {
             // Upper left
-            if (image) {
+            /* if (image) {
                 xCoord  = 54;
                 yCoord  = 2;
                 xCoord2 = 54;
@@ -73,14 +61,14 @@ public class WtpEvent extends GuiScreen {
                 xCoord3 = 54;
                 yCoord3 = 22;
             }
-            else {
+            else { */
                 xCoord  = 2;
                 yCoord  = 2;
                 xCoord2 = 2;
                 yCoord2 = 12;
                 xCoord3 = 2;
                 yCoord3 = 22;
-            }
+            // }
         }
         else if (textPos == 1) {
             // Upper right
@@ -110,7 +98,7 @@ public class WtpEvent extends GuiScreen {
             yCoord3 = scale.getScaledHeight() - 10 - (10 * (lines - 2));
         }
         if (event.gui instanceof GuiMainMenu) {
-            if (shadow) {
+            /*if (shadow) {
                 fontRenderer.drawStringWithShadow(string, xCoord, yCoord, color);
                 if (lines == 2) {
                     fontRenderer.drawStringWithShadow(string2, xCoord2, yCoord2, color);
@@ -120,7 +108,7 @@ public class WtpEvent extends GuiScreen {
                     fontRenderer.drawStringWithShadow(string3, xCoord3, yCoord3, color);
                 }
             }
-            else {
+            else { */
                 fontRenderer.drawString(string, xCoord, yCoord, color);
                 if (lines == 2) {
                     fontRenderer.drawString(string2, xCoord2, yCoord2, color);
@@ -129,8 +117,8 @@ public class WtpEvent extends GuiScreen {
                     fontRenderer.drawString(string2, xCoord2, yCoord2, color);
                     fontRenderer.drawString(string3, xCoord3, yCoord3, color);
                 }
-            }
-            if (image) {
+            // }
+            /*if (image) {
                 File iconDir = new File(ResourceHandler.getModsFolder(), "/icons");
                 if (iconDir.exists()) {
                     for (File file : iconDir.listFiles()) {
@@ -151,14 +139,14 @@ public class WtpEvent extends GuiScreen {
                 renderIcon();
                 // Call for render here.
                 // RenderCustomTexture(2, 2, 0, 0, 50, 50, new ResourceLocation(iconDir.getPath(), "icon.png"), 1);
-            }
+            } */
         }
     }
     
-    public void renderIcon() {
+    /* public void renderIcon() {
         GL11.glPushMatrix();
         BufferedImage image;
-        Tessellator t = Tessellator.instance;
+        Tessellator t = Tessellator.getInstance();
         
         Integer icon = iconNames.get(Wtp.config.favIcon.toLowerCase());
         image = icons.get(icon);
@@ -178,7 +166,7 @@ public class WtpEvent extends GuiScreen {
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
-    }
+    } */
 
     /*public void RenderCustomTexture(int x, int y, int u, int v, int width, int height, ResourceLocation resourceLocation, float scale) {
         x /= scale;

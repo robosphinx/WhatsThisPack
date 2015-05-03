@@ -3,18 +3,20 @@ package robosphinx.mods.wtp;
 /**
  * @author robosphinx, calisbeast
  */
+
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.relauncher.Side;
 import robosphinx.mods.wtp.event.WtpEvent;
 import robosphinx.mods.wtp.handler.ConfigHandler;
 import robosphinx.mods.wtp.handler.ResourceHandler;
 import robosphinx.mods.wtp.reference.Reference;
 import robosphinx.mods.wtp.util.LogHelper;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 /*
  * Defines our mod for FML and Forge to load.
@@ -35,7 +37,8 @@ public class Wtp {
      */
     @EventHandler
     public void PreInit(FMLPreInitializationEvent event) {
-        if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+        // Since all WTP does is render on the main menu, it is a client-side only mod.
+        if (event.getSide() == Side.SERVER) {
             log.error("You're loading WTP on a server! This is a client-side only mod!");
         }
         // Sends the event call to our Config Handler.
