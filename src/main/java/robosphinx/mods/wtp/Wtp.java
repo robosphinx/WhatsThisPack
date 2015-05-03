@@ -3,23 +3,18 @@ package robosphinx.mods.wtp;
 /**
  * @author robosphinx, calisbeast
  */
+import net.minecraftforge.common.MinecraftForge;
 import robosphinx.mods.wtp.event.WtpEvent;
 import robosphinx.mods.wtp.handler.ConfigHandler;
+import robosphinx.mods.wtp.handler.ResourceHandler;
 import robosphinx.mods.wtp.reference.Reference;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
+import robosphinx.mods.wtp.util.LogHelper;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 /*
  * Defines our mod for FML and Forge to load.
@@ -27,20 +22,26 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 public class Wtp {
 
-    private ConfigHandler config;
+    private LogHelper log;
+    public static ConfigHandler config;
     /*
      * Makes this class accessible from other mods (makes addons and integration possible).
      */
     @Instance(value = Reference.MOD_ID)
-    public static Wtp     instance;
+    public static Wtp instance;
 
     /*
      * Forge pre-initialization call, loads our config or creates a config if none exists.
      */
     @EventHandler
     public void PreInit(FMLPreInitializationEvent event) {
+        if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+            log.error("You're loading WTP on a server! This is a client-side only mod!");
+        }
         // Sends the event call to our Config Handler.
         ConfigHandler.init(event.getSuggestedConfigurationFile());
+        // Loads resources for us to access later.
+        ResourceHandler.init();
     }
 
     /*
@@ -48,6 +49,7 @@ public class Wtp {
      */
     @EventHandler
     public void Init(FMLInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(new WtpEvent());
+        MinecraftForge.EVENT_BUS.register(WtpEvent.instance);
+        FMLCommonHandler.instance().bus().register(WtpEvent.instance);
     }
 }

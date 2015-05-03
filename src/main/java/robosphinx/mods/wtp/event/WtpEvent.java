@@ -1,12 +1,9 @@
 package robosphinx.mods.wtp.event;
 
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -16,18 +13,14 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.resources.IResourcePack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 import org.lwjgl.opengl.GL11;
 
-import robosphinx.mods.wtp.client.renderer.IconRenderer;
+import robosphinx.mods.wtp.Wtp;
 import robosphinx.mods.wtp.handler.ConfigHandler;
+import robosphinx.mods.wtp.handler.ResourceHandler;
 import robosphinx.mods.wtp.util.LogHelper;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class WtpEvent extends GuiScreen {
@@ -39,6 +32,7 @@ public class WtpEvent extends GuiScreen {
     private FontRenderer     fontRenderer = mc.fontRenderer;
     private LogHelper        log;
     private ScaledResolution scale;
+    public static WtpEvent   instance     = new WtpEvent();
     
     private int              xCoord;
     private int              yCoord;
@@ -46,7 +40,6 @@ public class WtpEvent extends GuiScreen {
     private int              yCoord2;
     private int              xCoord3;
     private int              yCoord3;
-    private IconRenderer     renderer;
     
     /*
      * gets our values from the config.
@@ -60,7 +53,9 @@ public class WtpEvent extends GuiScreen {
     private boolean          shadow       = ConfigHandler.shadow;
     private int              lines        = ConfigHandler.lines;
     
-    private static HashMap<Integer, BufferedImage> icons = new HashMap<Integer, BufferedImage>();
+    public static HashMap<String, Integer>         iconNames   = new HashMap<String, Integer>();
+    public static HashMap<Integer, BufferedImage>  icons       = new HashMap<Integer, BufferedImage>();
+    public static HashMap<BufferedImage, Integer>  iconImageId = new HashMap<BufferedImage, Integer>();
     
     /*
      * This is the actual event we're tapping into - every time the GUI is an instance of the Main Menu, we will call to render our text.
@@ -136,31 +131,73 @@ public class WtpEvent extends GuiScreen {
                 }
             }
             if (image) {
-                File mcDir = new File(Minecraft.getMinecraft().mcDataDir, "mods");
-                File iconDir = new File (mcDir, "wtp_icons");
-                if (!iconDir.exists()) {
-                    log.info("No icon dir to load from! Please place a 50px by 50px icon in 'mods/WTP Icons' (with the space and case-sensitive!)");
-                }
-                else {
+                File iconDir = new File(ResourceHandler.getModsFolder(), "/icons");
+                if (iconDir.exists()) {
                     for (File file : iconDir.listFiles()) {
                         if (file.getName().endsWith(".png")) {
                             try {
                                 BufferedImage img = ImageIO.read(file);
                                 if (img != null) {
-                                    icons.put(icons.size(),  img);
+                                    iconNames.put(file.getName().substring(0,  file.getName().length() - 4).toLowerCase(), icons.size());
+                                    icons.put(icons.size(), img);
+                                    iconImageId.put(img, -1);
                                 }
-                            }
-                            catch (IOException e) {
-                                log.info(e);
+                            } catch (IOException e) {
+                                
                             }
                         }
                     }
                 }
-                Random rand = new Random();
-                renderer = new IconRenderer(mc.getTextureManager(), icons.get(0));
-                renderer.loadIcon();
-                renderer.drawImage(2, 2, 50, 50);
+                renderIcon();
+                // Call for render here.
+                // RenderCustomTexture(2, 2, 0, 0, 50, 50, new ResourceLocation(iconDir.getPath(), "icon.png"), 1);
             }
         }
     }
+    
+    public void renderIcon() {
+        GL11.glPushMatrix();
+        BufferedImage image;
+        Tessellator t = Tessellator.instance;
+        
+        Integer icon = iconNames.get(Wtp.config.favIcon.toLowerCase());
+        image = icons.get(icon);
+        
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, iconImageId.get(image));
+        
+        t.startDrawingQuads();
+        t.addVertexWithUV(2, 52, 0, 0.0, 1.0);
+        t.addVertexWithUV(52, 52, 0, 0.0, 1.0);
+        t.addVertexWithUV(52, 2, 0, 0.0, 1.0);
+        t.addVertexWithUV(2, 2, 0, 0.0, 1.0);
+        t.draw();
+        
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glPopMatrix();
+    }
+
+    /*public void RenderCustomTexture(int x, int y, int u, int v, int width, int height, ResourceLocation resourceLocation, float scale) {
+        x /= scale;
+        y /= scale;
+        
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glScalef(scale, scale, scale);
+        
+        if(resourceLocation != null) {
+            mc.getTextureManager().bindTexture(resourceLocation);
+            log.all("[WTP][INFO] Found icon file at " + resourceLocation.toString());
+        } else {
+            log.error("[WTP][ERROR] Searching for icon file...");
+            log.error("[WTP][ERROR] No icon file found!");
+        }
+        
+        mc.ingameGUI.drawTexturedModalRect(x, y, u, v, width, height);
+        
+        GL11.glPopMatrix();
+    }*/
 }
