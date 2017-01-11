@@ -1,10 +1,10 @@
 [
 {
-  "modid": "WhatsThisPack",
-  "name": "WTP",
-  "description": "WTP, or What's this pack, simply displays a modpack name or a message in the upper left corner of the main menu. The string and color are both configurable.",
-  "version": "1.0.31",
-  "mcversion": "1.8",
+  "modid": "wtp",
+  "name": "What's This Pack",
+  "description": "WTP, or What's this pack, simply displays a modpack name or a message in a corner of the main menu. The string, color, and corner are configurable.",
+  "version": "1.2.0",
+  "mcversion": "1.10.2",
   "url": "",
   "updateUrl": "",
   "authors": ["Robosphinx"],

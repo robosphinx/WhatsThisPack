@@ -5,12 +5,11 @@ package robosphinx.mods.wtp;
  */
 
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import robosphinx.mods.wtp.event.WtpEvent;
 import robosphinx.mods.wtp.handler.ConfigHandler;
@@ -53,6 +52,5 @@ public class Wtp {
     @EventHandler
     public void Init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(WtpEvent.instance);
-        FMLCommonHandler.instance().bus().register(WtpEvent.instance);
     }
 }
