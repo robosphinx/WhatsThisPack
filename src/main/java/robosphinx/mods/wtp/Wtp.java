@@ -20,7 +20,7 @@ import robosphinx.mods.wtp.util.LogHelper;
 /*
  * Defines our mod for FML and Forge to load.
  */
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, clientSideOnly = true)
 public class Wtp {
 
     private LogHelper log;
