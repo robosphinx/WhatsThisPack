@@ -20,7 +20,7 @@ public class WtpEvent extends GuiScreen {
      */
     private Minecraft           mc           = Minecraft.getMinecraft();
     private ForgeVersion.Status status       = ForgeVersion.getStatus();
-    private FontRenderer        fontRenderer = mc.fontRendererObj;
+    private FontRenderer        fontRenderer = mc.fontRenderer;
     private LogHelper        log;
     private ScaledResolution scale;
     public static WtpEvent   instance     = new WtpEvent();

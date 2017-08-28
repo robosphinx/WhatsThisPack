@@ -1,7 +1,7 @@
 package robosphinx.mods.wtp;
 
 /**
- * @author robosphinx, calisbeast
+ * @author robosphinx
  */
 
 import net.minecraftforge.common.MinecraftForge;
