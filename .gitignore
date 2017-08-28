@@ -1,9 +1,11 @@
 .gradle
 .idea
 \build
+\bin
 \classes
 \eclipse
 \gradle
 \run
 *.txt
 gradlew*
+WTP.*
