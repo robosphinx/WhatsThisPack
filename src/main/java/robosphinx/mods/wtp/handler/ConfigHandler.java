@@ -12,16 +12,11 @@ public class ConfigHandler {
 
     public static Configuration config;
     public static int           guiPos     = 0;
-    private static String       colorTemp1 = "";
-    private static String       colorTemp2 = "";
-    private static String       colorTemp3 = "";
-    public static int           color1     = 0xffffff;
-    public static int           color2     = 0xffffff;
-    public static int           color3     = 0xffffff;
-    public static String        message    = "";
-    public static String        message2   = "";
-    public static String        message3   = "";
     public static int           lines      = 1;
+    private static String[]     colorTemp;
+    public static int[]         color;
+    public static String[]      message;
+    public static boolean       allInOne   = true;
     private static LogHelper    log;
 
     /*
@@ -41,39 +36,41 @@ public class ConfigHandler {
             loadConfig();
         }
     }
+    
+    private static void initArrays() {
+        colorTemp = new String[lines];
+        color = new int[lines];
+        message = new String[lines];
+    }
 
     public static void loadConfig() {
         // Load the config file.
         config.load();
         // Read in our values.
+        lines       = config.get(Configuration.CATEGORY_GENERAL, "Lines", 1, "How many lines you are using. Use come common sense here :P - Run minecraft once after changing this to generate options for more lines.").getInt(1);
         guiPos      = config.get(Configuration.CATEGORY_GENERAL, "Text Position", 0, "Positions: 0 - Top Left corner, 1 - Top right corner, 2 - Bottom left corner, 3 - Bottom right corner.").getInt(0);
-        message     = config.get(Configuration.CATEGORY_GENERAL, "Text Line 1", "** Default Line 1 **", "Text - Line 1").getString();
-        colorTemp1  = config.get(Configuration.CATEGORY_GENERAL, "Text Color - Line 1", "FFFFFF", "Text color line 1 - This must be hexadecimal ( RRGGBB )").getString();
-        color1      = Integer.parseInt(colorTemp1, 16);
-        message2    = config.get(Configuration.CATEGORY_GENERAL, "Text Line 2", "** Default Line 2 **", "Text - Line 2.").getString();
-        colorTemp2  = config.get(Configuration.CATEGORY_GENERAL, "Text Color - Line 2", "FFFFFF", "Text color line 2- This must be hexadecimal ( RRGGBB )").getString();
-        color2      = Integer.parseInt(colorTemp2, 16);
-        message3    = config.get(Configuration.CATEGORY_GENERAL, "Text Line 3", "** Default Line 3 **", "Text - Line 3.").getString();
-        colorTemp3  = config.get(Configuration.CATEGORY_GENERAL, "Text Color - Line 3", "FFFFFF", "Text color line 3- This must be hexadecimal ( RRGGBB )").getString();
-        color3      = Integer.parseInt(colorTemp3, 16);
-        lines       = config.get(Configuration.CATEGORY_GENERAL, "Lines", 1, "How many lines you are using. Max of 3 right now.").getInt(1);
+        
+        initArrays();
+        
+        for (int i = 0; i < lines; i++) {
+            message[i]    = config.get(Configuration.CATEGORY_GENERAL, "Text Line " + (i + 1), "** Default Line " + (i + 1) + " **", "Text - Line " + (i + 1)).getString();
+            colorTemp[i]  = config.get(Configuration.CATEGORY_GENERAL, "Text Color - Line " + (i + 1), "FFFFFF", "Text color line " + (i + 1) + " - This must be hexadecimal ( RRGGBB )").getString();
+            color[i]      = Integer.parseInt(colorTemp[i], 16);
+        }
+        
+        allInOne    = config.get(Configuration.CATEGORY_GENERAL, "All In One", true, "Are these messages displayed at the same time? False to cycle through them randomly.").getBoolean();
         // If the config file has changed, only THEN save it.
         if (config.hasChanged()) {
             config.save();
         }
         log.info("+++++ WTP Configuration options: +++++");
-        log.info("++  guiPos: " + guiPos);
-        log.info("++  lines : " + lines);
-        log.info("++  line 1: " + message);
-        log.info("++  color : " + colorTemp1);
-        if (lines == 2 || lines == 3) {
-            log.info("++  line 2: " + message2);
-            log.info("++  color : " + colorTemp2);
-            if (lines == 3) {
-                log.info("++  line 3: " + message3);
-                log.info("++  color : " + colorTemp3);
-            }
+        log.info("++  guiPos  : " + guiPos);
+        log.info("++  lines   : " + lines);
+        for (int i = 0; i < lines; i++) {
+            log.info("++  line " + (i + 1) + "  : " + message[i]);
+            log.info("++  color   : " + colorTemp[i]);
         }
+        log.info("++  allInOne: " + allInOne);
         log.info("++++++++++++++++++++++++++++++++++++++");
     }
 }

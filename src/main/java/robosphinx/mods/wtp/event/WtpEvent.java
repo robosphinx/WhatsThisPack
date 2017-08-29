@@ -9,6 +9,7 @@ import robosphinx.mods.wtp.handler.ConfigHandler;
 import robosphinx.mods.wtp.util.LogHelper;
 
 import java.io.IOException;
+import java.util.Random;
 
 import static net.minecraftforge.common.ForgeVersion.Status.BETA_OUTDATED;
 import static net.minecraftforge.common.ForgeVersion.Status.OUTDATED;
@@ -24,58 +25,88 @@ public class WtpEvent extends GuiScreen {
     private LogHelper        log;
     private ScaledResolution scale;
     public static WtpEvent   instance     = new WtpEvent();
+    private static Random    rand         = new Random();
     
-    private int              xCoord;
-    private int              yCoord;
-    private int              xCoord2;
-    private int              yCoord2;
-    private int              xCoord3;
-    private int              yCoord3;
+    private int[]            xCoord;
+    private int[]            yCoord;
+    private int              line;
+    private boolean          linePicked = false;
     
     /*
      * gets our values from the config.
      */
-    private String           string       = ConfigHandler.message;
-    private String           string2      = ConfigHandler.message2;
-    private String           string3      = ConfigHandler.message3;
-    private int              color1        = ConfigHandler.color1;
-    private int              color2        = ConfigHandler.color2;
-    private int              color3        = ConfigHandler.color3;
+    private String[]         string       = ConfigHandler.message;
+    private int[]            color        = ConfigHandler.color;
     private int              textPos      = ConfigHandler.guiPos;
     private int              lines        = ConfigHandler.lines;
+    private boolean          allInOne     = ConfigHandler.allInOne;
+    
+    private void pickLine() {
+        if (!linePicked) {
+            line = rand.nextInt(lines);
+            linePicked = true;
+        }
+    }
+    
+    private void initArrays() {
+        xCoord = new int[lines];
+        yCoord = new int[lines];
+    }
     
     /*
      * This is the actual event we're tapping into - every time the GUI is an instance of the Main Menu, we will call to render our text.
      */
     @SubscribeEvent
     public void onRenderMainMenu(GuiScreenEvent event) throws IOException {
+        pickLine();
+        initArrays();
         scale = new ScaledResolution(mc);
         if (textPos == 0) {
             // Upper left
-            xCoord  = 2;
-            yCoord  = 2;
-            xCoord2 = 2;
-            yCoord2 = 12;
-            xCoord3 = 2;
-            yCoord3 = 22;
+            if(allInOne) {
+                for (int i = 0; i < lines; i++) {
+                    xCoord[i] = 2;
+                    if (i == 0) {
+                        yCoord[i] = 2;
+                    } else {
+                        yCoord[i] = yCoord[i - 1] + 10;
+                    }
+                }
+            }
+            else {
+                xCoord[line] = 2;
+                yCoord[line] = 2;
+            }
         }
         else if (textPos == 1) {
             // Upper right
-            xCoord  = scale.getScaledWidth() - fontRenderer.getStringWidth(string) - 2;
-            yCoord  = 2;
-            xCoord2 = scale.getScaledWidth() - fontRenderer.getStringWidth(string2) - 2;
-            yCoord2 = 12;
-            xCoord3 = scale.getScaledWidth() - fontRenderer.getStringWidth(string3) - 2;
-            yCoord3 = 22;
+            if (allInOne) {
+                for (int i = 0; i < lines; i++) {
+                    xCoord[i] = scale.getScaledWidth() - fontRenderer.getStringWidth(string[i]) - 2;
+                    if (i == 0) {
+                        yCoord[i] = 2;
+                    } else {
+                        yCoord[i] = yCoord[i - 1] + 10;
+                    }
+                }
+            }
+            else {
+                xCoord[line] = scale.getScaledWidth() - fontRenderer.getStringWidth(string[line]) - 2;
+                yCoord[line] = 2;
+            }
         }
         else if (textPos == 2) {
-            // Lower left
-            xCoord  = 2;
-            yCoord  = scale.getScaledHeight() - 50 - (10 * lines);
-            xCoord2 = 2;
-            yCoord2 = scale.getScaledHeight() - 50 - (10 * (lines - 1));
-            xCoord3 = 2;
-            yCoord3 = scale.getScaledHeight() - 50 - (10 * (lines - 2));
+            if (allInOne) {
+                // Lower left
+                for (int i = 0; i < lines; i++) {
+                    xCoord[i] = 2;
+                    yCoord[i] = scale.getScaledHeight() - 50 - (10 * (lines - i - 1));
+                }
+            }
+            else {
+                xCoord[line] = 2;
+                yCoord[line] = scale.getScaledHeight() - 50 - 10;
+            }
         }
         else if (textPos == 3) {
             // IS forge out of date? If it is, another line is drawn by forge
@@ -86,22 +117,30 @@ public class WtpEvent extends GuiScreen {
             else {
                 y = 10;
             }
-            // Lower right
-            xCoord  = scale.getScaledWidth() - fontRenderer.getStringWidth(string) - 2;
-            yCoord  = scale.getScaledHeight() - y - (10 * lines);
-            xCoord2 = scale.getScaledWidth() - fontRenderer.getStringWidth(string2) - 2;
-            yCoord2 = scale.getScaledHeight() - y - (10 * (lines - 1));
-            xCoord3 = scale.getScaledWidth() - fontRenderer.getStringWidth(string3) - 2;
-            yCoord3 = scale.getScaledHeight() - y - (10 * (lines - 2));
-        }
-        if (event.getGui() instanceof GuiMainMenu) {
-            fontRenderer.drawStringWithShadow(string, xCoord, yCoord, color1);
-            if (lines == 2 || lines == 3) {
-                fontRenderer.drawStringWithShadow(string2, xCoord2, yCoord2, color2);
-                if (lines == 3) {
-                    fontRenderer.drawStringWithShadow(string3, xCoord3, yCoord3, color3);
+            if (allInOne) {
+                // Lower right
+                for (int i = 0; i < lines; i++) {
+                    xCoord[i] = scale.getScaledWidth() - fontRenderer.getStringWidth(string[i]) - 2;
+                    yCoord[i] = scale.getScaledHeight() - y - (10 * (lines - i));
                 }
             }
+            else {
+                xCoord[line] = scale.getScaledWidth() - fontRenderer.getStringWidth(string[line]) - 2;
+                yCoord[line] = scale.getScaledHeight() - y - 10;
+            }
+        }
+        if (event.getGui() instanceof GuiMainMenu) {
+            if (allInOne) {
+                for (int i = 0; i < lines; i++) {
+                    fontRenderer.drawStringWithShadow(string[i], xCoord[i], yCoord[i], color[i]);
+                }
+            }
+            else {
+                fontRenderer.drawStringWithShadow(string[line], xCoord[line], yCoord[line], color[line]);
+            }
+        }
+        else {
+            linePicked = false;
         }
     }
 }
